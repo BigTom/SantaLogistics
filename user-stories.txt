@@ -1,0 +1,12 @@
+
+Create invoice story
+    Input - sack requirements
+    Output - invoice -- total value of the sack request
+
+    invoice row = count of item * cost of item
+
+Gifts come in, go to workshops, workshops give invoice back to Santa
+
+Invoice by workshop: straight total
+Invoice by workshop: straight total + kibble requirement
+Invoice by workshop: total + kibble requirement + discount
