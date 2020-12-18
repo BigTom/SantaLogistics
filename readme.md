@@ -37,6 +37,10 @@ The feeling is that the best place to start is the workshops because:
 As it turns out the biggest problem in the workshops is simply calculating the basic cost of the gifts 
 (who knew Trolls were so bad at counting).
 
+Currently the workshops do have mechanical tills for adding up purchases.
+The idea is to replace these with  new electronic "tills" that
+will do the adding up and more.
+
 The next biggest problem is working out the kibble requirement
 
 Santa is feeling generous this year so he is not so worried about getting a discount but it is still a 
