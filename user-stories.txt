@@ -1,7 +1,11 @@
 
-Create invoice story
-    Input - sack requirements
-    Output - invoice -- total value of the sack request
+Create basic invoice story
+    Inputs -
+        sack requirements
+        gift prices
+    Output -
+        invoice rows - GIFT | COUNT | Row Total Cost
+        Net invoice total cost
 
     invoice row = count of item * cost of item
 

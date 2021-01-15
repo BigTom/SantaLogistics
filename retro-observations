@@ -1,0 +1,23 @@
+We will pick an approach and review after each ensemble cycle
+
+What did we do:
+Agreed direction and approach
+Chat between 5 minute coding sessions is helpful
+Tidying up code and refactoring names was helpful
+Fixed data files
+Used the "fake-it" approach on one of the tests.
+
+Observations
+Adding print lines to get through a test suggests the tests are too big
+(print lines are a debugging tool)
+Having a higher level list of what we are doing would be helpful (e.g. a user journey map)
+
+Questions
+Are we going too fast? e.g. do we _all_ understand the list comprehension
+We are we not using the python csv package?
+
+Feelings
+Felt good
+Taking a couple of minutes between 'rounds' to re-orient helped everyone stay engaged
+returning to the the user story each time kept us aligned
+
