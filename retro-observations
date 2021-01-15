@@ -1,3 +1,12 @@
+15th January
+Still using the chat between 5 minute coding sessions
+Used the fake-it approach to incrementally develop a test
+Always means we get a passing test quickly
+Broke problem down into smaller steps (e.g. header and footer in output)
+Generated lots of small functions doing one thing well
+- risk: we could get lost with all the little functions
+
+8th January
 We will pick an approach and review after each ensemble cycle
 
 What did we do:

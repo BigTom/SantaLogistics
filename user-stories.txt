@@ -1,15 +1,15 @@
+Gifts come in, go to workshops, workshops give invoice back to Santa
 
 Create basic invoice story
     Inputs -
         sack requirements
         gift prices
     Output -
-        invoice rows - GIFT | COUNT | Row Total Cost
+        invoice rows - GIFT | COUNTith f | Row Total Cost
         Net invoice total cost
 
     invoice row = count of item * cost of item
 
-Gifts come in, go to workshops, workshops give invoice back to Santa
 
 Invoice by workshop: straight total
 Invoice by workshop: straight total + kibble requirement

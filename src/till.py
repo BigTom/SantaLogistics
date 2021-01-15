@@ -24,9 +24,52 @@ def calculate_net_invoice_price(total_row_costs):
     return sum(total_row_costs.values())
 
 
-def create_invoice_content(sack_request_file, param1):
+def read_files(sack_request_file, gift_price_file):
     sack_request_content = read_sack_request_contents(sack_request_file)
+    prices = read_gift_prices(gift_price_file, sack_request_content["workshop"])
+    return sack_request_content, prices
 
-    return {'items': [['TOP', 10, 20], ['HOOP', 40, 140], ['HULA HOOP', 20, 105]],
-            'net_total': "FIX ME NEXT",
+def create_invoice_content(sack_request_content,prices):
+    items_quantity = sack_request_content['items']
+    items_total_costs = calculate_item_total(items_quantity, prices)
+    items = [[item_name,
+              quantity,
+              items_total_costs[item_name]]
+             for item_name, quantity in items_quantity.items()]
+    total = calculate_net_invoice_price(items_total_costs)
+
+    return {'items': items,
+            'net_total': total,
             'workshop': sack_request_content["workshop"]}
+
+
+
+
+def generate_output(invoice_content):
+    # expected_input = {"workshop": "ELVES",
+    #                    "items": [["TOP", 10, 20],
+    #                              ["HOOP", 40, 140],
+    #                              ["HULA HOOP", 20, 105]],
+    #                    "net_total": 265}
+
+    output = """
+ELVES
+
+GIFT      | COUNT | Total Cost
+
+TOP       | 10    |     ₻20.00
+HOOP      | 40    |    ₻140.00
+HULA HOOP | 20    |    ₻105.00
+
+Total:                 ₻265.00
+"""
+    return output
+
+
+def generate_header(invoice_content):
+    return invoice_content["workshop"]
+
+
+def generate_footer(invoice_content):
+    net_total = invoice_content["net_total"]
+    return "Total:                 ₻{total:.2f}".format(total=net_total)
