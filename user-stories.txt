@@ -10,7 +10,5 @@ Create basic invoice story
 
     invoice row = count of item * cost of item
 
-
-Invoice by workshop: straight total
-Invoice by workshop: straight total + kibble requirement
+Invoice by workshop: straight total + discount
 Invoice by workshop: total + kibble requirement + discount

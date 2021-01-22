@@ -68,7 +68,7 @@ HOOP | 40 | ₻140.00
 HULA HOOP | 20 | ₻105.00
 
 `Total:    ₻265.00`\
-`Discount:    7.5%`\
+`Discount:    5.0%`\
 `Total:      ₻245.50`
 
 ---

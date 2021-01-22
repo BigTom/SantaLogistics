@@ -69,8 +69,7 @@ class Test(TestCase):
                              ["HULA HOOP", 20, 105]],
                    "net_total": 265}
         actual = till.generate_output(invoice_content)
-        expected = """
-ELVES
+        expected = """ELVES
 
 GIFT      | COUNT | Total Cost
 
@@ -78,8 +77,7 @@ TOP       | 10    |     ₻20.00
 HOOP      | 40    |    ₻140.00
 HULA HOOP | 20    |    ₻105.00
 
-Total:                 ₻265.00
-"""
+Total:                 ₻265.00"""
         self.assertEqual(expected, actual)
 
     def test_create_output_header(self):
@@ -89,7 +87,7 @@ Total:                 ₻265.00
                                      ["HULA HOOP", 20, 105]],
                            "net_total": 265}
         expected = "ELVES"
-        actual = till.generate_header(invoice_content)
+        actual = till.generate_header(invoice_content["workshop"])
         self.assertEqual(expected, actual)
 
     def test_create_output_footer(self):
@@ -99,8 +97,46 @@ Total:                 ₻265.00
                                      ["HULA HOOP", 20, 105]],
                            "net_total": 265}
         expected = "Total:                 ₻265.00"
-        actual = till.generate_footer(invoice_content)
+        actual = till.generate_footer(invoice_content["net_total"])
         self.assertEqual(expected, actual)
 
     def test_create_output_lines(self):
-        self.fail("write code to generate invoice lines")
+        invoice_content = {"workshop": "ELVES",
+                           "items": [["TOP", 10, 20],
+                                     ["HOOP", 40, 140],
+                                     ["HULA HOOP", 20, 105]],
+                           "net_total": 265}
+        expected = """TOP       | 10    |     ₻20.00
+HOOP      | 40    |    ₻140.00
+HULA HOOP | 20    |    ₻105.00"""
+        actual = till.generate_invoice_lines(invoice_content["items"])
+        self.assertEqual(expected, actual)
+
+    def test_get_discount(self):
+        workshop = "ELVES"
+        total = 265
+        discounts = {"TOTAL": [10, 50, 100, 500, 1000],
+                     "ELVES": [0.0, 2.5, 5.0, 7.5, 10.0]}
+        expected = 5.0
+        actual = till.get_discount(workshop, total, discounts)
+        self.assertEqual(expected, actual)
+
+
+
+# def test_read_the_discount_file(self):
+#    # TOTAL, ELVES, DWARVES, GNOMES, PIXIES, TROLLS
+#    # 10, 0.00 %, 0.00 %, 0.00 %, 0.00 %, 0.00 %
+#    # 50, 2.50 %, 2.00 %, 2.00 %, 3.00 %, 5.00 %
+#    # 100, 5.00 %, 4.00 %, 5.00 %, 6.00 %, 5.00 %
+#    # 500, 7.50 %, 6.00 %, 7.00 %, 9.00 %, 5.00 %
+#    # 1000, 10.00 %, 8.00 %, 9.00 %, 12.00 %, 5.00 %
+#
+#     expected = [["TOTAL","ELVES","DWARVES","GNOMES","PIXIES","TROLLS"],
+#                 [],
+#                 [],
+#                 [],
+#                 [],
+#                 []]
+#
+#     actual = till.read_gift_prices("../data/gifts.csv", "ELVES")
+#     self.assertEqual(expected, actual)

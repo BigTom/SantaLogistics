@@ -29,7 +29,8 @@ def read_files(sack_request_file, gift_price_file):
     prices = read_gift_prices(gift_price_file, sack_request_content["workshop"])
     return sack_request_content, prices
 
-def create_invoice_content(sack_request_content,prices):
+
+def create_invoice_content(sack_request_content, prices):
     items_quantity = sack_request_content['items']
     items_total_costs = calculate_item_total(items_quantity, prices)
     items = [[item_name,
@@ -43,33 +44,39 @@ def create_invoice_content(sack_request_content,prices):
             'workshop': sack_request_content["workshop"]}
 
 
-
-
 def generate_output(invoice_content):
-    # expected_input = {"workshop": "ELVES",
-    #                    "items": [["TOP", 10, 20],
-    #                              ["HOOP", 40, 140],
-    #                              ["HULA HOOP", 20, 105]],
-    #                    "net_total": 265}
-
-    output = """
-ELVES
-
-GIFT      | COUNT | Total Cost
-
-TOP       | 10    |     ₻20.00
-HOOP      | 40    |    ₻140.00
-HULA HOOP | 20    |    ₻105.00
-
-Total:                 ₻265.00
-"""
-    return output
+    item_header = "GIFT      | COUNT | Total Cost"
+    return "\n\n".join([generate_header(invoice_content["workshop"]),
+                        item_header,
+                        generate_invoice_lines(invoice_content["items"]),
+                        generate_footer(invoice_content["net_total"])
+                        ])
 
 
-def generate_header(invoice_content):
-    return invoice_content["workshop"]
+def generate_header(header):
+    return header
 
 
-def generate_footer(invoice_content):
-    net_total = invoice_content["net_total"]
-    return "Total:                 ₻{total:.2f}".format(total=net_total)
+def generate_footer(footer_content):
+    return "Total:                 ₻{total:.2f}".format(total=footer_content)
+
+
+def generate_invoice_lines(gifts):
+    lines = [generate_invoice_line(gift) for gift in gifts]
+    return '\n'.join(lines)
+
+
+def generate_invoice_line(gift):
+    return "{name:10}| {count}    |".format(name=gift[0], count=gift[1]) + \
+           "₻{total:.2f}".format(total=gift[2]).rjust(11, " ")
+
+
+def get_discount(workshop, total, discounts):
+    discount_for_elves = [0.0, 2.5, 5.0, 7.5, 10.0]
+    total_gifts = [10, 50, 100, 500, 1000]
+    discount_index = 0
+    for index, amount in enumerate(total_gifts):
+        if amount > total:
+            break
+        discount_index = index
+    return discount_for_elves[discount_index]
