@@ -30,7 +30,7 @@ def read_files(sack_request_file, gift_price_file):
     return sack_request_content, prices
 
 
-def create_invoice_content(sack_request_content, prices):
+def create_invoice_content(sack_request_content, prices, discount_table):
     items_quantity = sack_request_content['items']
     items_total_costs = calculate_item_total(items_quantity, prices)
     items = [[item_name,
@@ -38,10 +38,12 @@ def create_invoice_content(sack_request_content, prices):
               items_total_costs[item_name]]
              for item_name, quantity in items_quantity.items()]
     total = calculate_net_invoice_price(items_total_costs)
+    discount = get_discount(sack_request_content['workshop'], total, discount_table)
 
     return {'items': items,
             'net_total': total,
-            'workshop': sack_request_content["workshop"]}
+            'workshop': sack_request_content["workshop"],
+            'discount':discount}
 
 
 def generate_output(invoice_content):
@@ -49,7 +51,7 @@ def generate_output(invoice_content):
     return "\n\n".join([generate_header(invoice_content["workshop"]),
                         item_header,
                         generate_invoice_lines(invoice_content["items"]),
-                        generate_footer(invoice_content["net_total"])
+                        generate_footer((invoice_content["net_total"], invoice_content["discount"]))
                         ])
 
 
@@ -58,7 +60,8 @@ def generate_header(header):
 
 
 def generate_footer(footer_content):
-    return "Total:                 ₻{total:.2f}".format(total=footer_content)
+    return "Total:                 ₻{total:.2f}\n".format(total=footer_content[0]) + \
+           "Discount:                 {discount:.1f}%".format(discount=footer_content[1])
 
 
 def generate_invoice_lines(gifts):
@@ -72,11 +75,9 @@ def generate_invoice_line(gift):
 
 
 def get_discount(workshop, total, discounts):
-    discount_for_elves = [0.0, 2.5, 5.0, 7.5, 10.0]
-    total_gifts = [10, 50, 100, 500, 1000]
-    discount_index = 0
+    total_gifts = discounts["TOTAL"]
     for index, amount in enumerate(total_gifts):
         if amount > total:
+            discount_index = index-1
             break
-        discount_index = index
-    return discount_for_elves[discount_index]
+    return discounts[workshop][discount_index]

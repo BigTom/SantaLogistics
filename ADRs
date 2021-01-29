@@ -1,0 +1,7 @@
+Move to objects
+
+Initial design objective:
+dictionary of workshop tills held by a constructing and routing class
+Each till holds info for its workshop
+request interacts the till to generate the invoice and the cover note (these can be simple strings initially
+Tills do not read files

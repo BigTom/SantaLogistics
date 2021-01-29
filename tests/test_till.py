@@ -45,12 +45,15 @@ class Test(TestCase):
                                   "HOOP": 40,
                                   "HULA HOOP": 20}}
         prices_fake = {"TOP": 2.0, "HOOP": 3.5, "HULA HOOP": 5.25}
-        actual = till.create_invoice_content(sack_request, prices_fake)
+        discounts = {"TOTAL": [10, 50, 100, 500, 1000],
+                     "ELVES": [0.0, 2.5, 5.0, 7.5, 10.0]}
+        actual = till.create_invoice_content(sack_request, prices_fake, discounts)
         expected = {"workshop": "ELVES",
                     "items": [["TOP", 10, 20],
                               ["HOOP", 40, 140],
                               ["HULA HOOP", 20, 105]],
-                    "net_total": 265}
+                    "net_total": 265,
+                    "discount": 5}
         self.assertEqual(expected, actual)
 
     def test_read_files(self):
@@ -67,7 +70,8 @@ class Test(TestCase):
                    "items": [["TOP", 10, 20],
                              ["HOOP", 40, 140],
                              ["HULA HOOP", 20, 105]],
-                   "net_total": 265}
+                   "net_total": 265,
+                   "discount": 5}
         actual = till.generate_output(invoice_content)
         expected = """ELVES
 
@@ -77,7 +81,8 @@ TOP       | 10    |     ₻20.00
 HOOP      | 40    |    ₻140.00
 HULA HOOP | 20    |    ₻105.00
 
-Total:                 ₻265.00"""
+Total:                 ₻265.00
+Discount:                 5.0%"""
         self.assertEqual(expected, actual)
 
     def test_create_output_header(self):
@@ -95,9 +100,11 @@ Total:                 ₻265.00"""
                            "items": [["TOP", 10, 20],
                                      ["HOOP", 40, 140],
                                      ["HULA HOOP", 20, 105]],
-                           "net_total": 265}
-        expected = "Total:                 ₻265.00"
-        actual = till.generate_footer(invoice_content["net_total"])
+                           "net_total": 265,
+                           "discount": 5}
+        expected = "Total:                 ₻265.00\n" + \
+                   "Discount:                 5.0%"
+        actual = till.generate_footer((invoice_content["net_total"], invoice_content["discount"]))
         self.assertEqual(expected, actual)
 
     def test_create_output_lines(self):
