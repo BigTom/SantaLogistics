@@ -1,11 +1,8 @@
 class SackRequest:
 
-    def __init__(self, path, till):
-        self.read_sack_request_contents(path)
-        self.till = till
-        self.gift_total_costs = {"TOP": 20,
-                        "HOOP": 140,
-                        "HULA HOOP": 105}
+    def __init__(self, sack_request_content):
+        self.workshop = sack_request_content['workshop']
+        self.gifts = sack_request_content['gifts']
 
     def read_sack_request_contents(self, path_to_data_file):
         with open(path_to_data_file, "r") as req:
@@ -21,3 +18,9 @@ class Till:
         self.gift_prices = gift_prices
         self.discount_rates = discount_rates
 
+    def get_order(self, my_sack_request):
+        lines = self.get_order_lines(my_sack_request.gifts)
+        return lines
+
+    def get_order_lines(self, gifts):
+        return {gift_name: count * self.gift_prices[gift_name] for gift_name, count in gifts.items()}

@@ -3,15 +3,6 @@ from till_oop import SackRequest, Till
 
 
 class Test(TestCase):
-    def test_read_the_sack_items(self):
-        expected = {"workshop": "ELVES",
-                    "gifts": {"TOP": 10,
-                              "HOOP": 40,
-                              "HULA HOOP": 20}}
-
-        my_sack_request = SackRequest("../data/example_sack.csv", self.generate_dummy_till())
-        self.assertEqual(expected["workshop"], my_sack_request.workshop)
-        self.assertEqual(expected["gifts"], my_sack_request.gifts)
 
     def test_construct_till(self):
         gift_prices = {"TOP": 2.00,
@@ -35,12 +26,33 @@ class Test(TestCase):
                           "DISCOUNTS": [0.0, 2.5, 5.0, 7.5, 10.0]}
         return Till(gift_prices, discount_rates)
 
-    def test_item_totals_are_calculated_from_product_and_counts(self):
+    def generate_dummy_sack_request(self):
+        request = {"workshop": "ELVES",
+                   "gifts": {"TOP": 10,
+                             "HOOP": 40,
+                             "HULA HOOP": 20}}
+        return SackRequest(request)
+
+    def test_till_calculate_order_line_cost_from_a_sack_request(self):
         my_till = self.generate_dummy_till()
-        my_sack_request = SackRequest("../data/example_sack.csv", my_till)
+
+        my_sack_request = self.generate_dummy_sack_request()
 
         expected = {"TOP": 20,
                     "HOOP": 140,
                     "HULA HOOP": 105}
+        self.assertEqual(expected, my_till.get_order(my_sack_request))
 
-        self.assertEqual(expected, my_sack_request.gift_total_costs)
+    def test_till_calculate_order_line_cost_from_any_sack_request(self):
+        my_till = self.generate_dummy_till()
+
+        my_sack_request = self.generate_another_dummy_sack_request()
+        expected = {"TOP": 28,
+                    "HULA HOOP": 131.25}
+        self.assertEqual(expected, my_till.get_order(my_sack_request))
+
+    def generate_another_dummy_sack_request(self):
+        request = {"workshop": "ELVES",
+                   "gifts": {"TOP": 14,
+                             "HULA HOOP": 25}}
+        return SackRequest(request)
