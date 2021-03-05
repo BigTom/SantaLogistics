@@ -79,7 +79,7 @@ class Test(TestCase):
         # Generate a sack request and use it to generate invoice data
         my_till = Till({'ELVES': generate_dummy_workshop()})
         my_sack_request = generate_dummy_sack_request(my_till)
-        my_sack_request.generate_invoice_data()
+        my_sack_request.generate_invoice()
         expected = {"line_items": {"TOP": 20.0,
                                    "HOOP": 140.0,
                                    "HULA HOOP": 105.0},
@@ -90,15 +90,15 @@ class Test(TestCase):
     def test_create_output_header(self):
         my_till = Till({'ELVES': generate_dummy_workshop()})
         my_sack_request = generate_dummy_sack_request(my_till)
-        my_sack_request.generate_invoice_data()
+        my_sack_request.generate_invoice()
         expected = "ELVES"
         self.assertEqual(expected, my_sack_request.workshop_name)
 
     def test_create_output_footer(self):
         my_till = Till({'ELVES': generate_dummy_workshop()})
         my_sack_request = generate_dummy_sack_request(my_till)
-        my_sack_request.generate_invoice_data()
-        my_sack_request.generate_footer()
+        my_sack_request.generate_invoice()
+
         expected = "Total:                 ₻265.00\n" + \
                    "Discount:                 5.0%"
         self.assertEqual(expected, my_sack_request.footer)
@@ -106,9 +106,26 @@ class Test(TestCase):
     def test_create_output_lines(self):
         my_till = Till({'ELVES': generate_dummy_workshop()})
         my_sack_request = generate_dummy_sack_request(my_till)
-        my_sack_request.generate_invoice_data()
-        my_sack_request.generate_invoice_lines()
+        my_sack_request.generate_invoice()
+
         expected = """TOP       | 10    |     ₻20.00
 HOOP      | 40    |    ₻140.00
 HULA HOOP | 20    |    ₻105.00"""
         self.assertEqual(expected, my_sack_request.invoice_lines)
+
+    def test_create_invoice(self):
+        my_till = Till({'ELVES': generate_dummy_workshop()})
+        my_sack_request = generate_dummy_sack_request(my_till)
+        my_sack_request.generate_invoice()
+
+
+        expected = """ELVES
+
+TOP       | 10    |     ₻20.00
+HOOP      | 40    |    ₻140.00
+HULA HOOP | 20    |    ₻105.00
+
+Total:                 ₻265.00
+Discount:                 5.0%"""
+
+        self.assertEqual(expected, my_sack_request.invoice)

@@ -36,27 +36,36 @@ class SackRequest:
         self.summary_data = {"total": sum(self.line_items.values()),
                              "discount_rate": 5}
 
-    def generate_invoice_data(self):
+    def __generate_invoice_data(self):
         self.calculate_lines_items()
         self.calculate_summary_data()
         self.invoice_data = {"line_items": self.line_items,
                              "summary": self.summary_data}
 
-    def generate_footer(self):
+    def __generate_footer(self):
         self.footer = "Total:                 ₻{total:.2f}\n".format(total=self.summary_data['total']) + \
                       "Discount:                 {discount:.1f}%".format(discount=self.summary_data["discount_rate"])
 
-    def generate_invoice_lines(self):
-        lines = [self.generate_invoice_line(gift) for gift in self.gifts.keys()]
+    def __generate_invoice_lines(self):
+        lines = [self.__generate_invoice_line(gift) for gift in self.gifts.keys()]
         self.invoice_lines = '\n'.join(lines)
 
-    def generate_invoice_line(self, gift):
+    def __generate_invoice_line(self, gift):
         return "{name:10}| {count}    |".format(name=gift, count=self.gifts[gift]) + \
                "₻{total:.2f}".format(total=self.invoice_data['line_items'][gift]).rjust(11, " ")
 
+    def generate_invoice(self):
+        self.__generate_invoice_data()
+        self.__generate_invoice_lines()
+        self.__generate_footer()
+
+        self.invoice = self.workshop_name + "\n\n" + \
+        self.invoice_lines + "\n\n" + \
+        self.footer
+
 
 class Workshop:
-    """ 
+    """
     Workshop should hold gift_prices and discount_rates,
     it should calculate the applicable discount and something shipping when relevant
 
